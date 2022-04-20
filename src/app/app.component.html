@@ -11,13 +11,16 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="ngx-codemirror mb-2">
-    <ngx-codemirror
-      [options]="options"
-      [ngModel]="defaults[mode]"
-      [disabled]="readOnly"
-      [autoFocus]="true"
-      (ngModelChange)="handleChange($event)"
-    ></ngx-codemirror>
+    <textarea codemirrorEditor
+    [options]="options"
+    [disabled]="readOnly"
+    [autoFocus]="true"
+    (cursorActivity)="handleChange($event)"
+    (focusChange)="handleChange($event)"
+    (scroll)="handleChange($event)"
+    (drop)="handleChange($event)"
+    (changeValue)="handleChange($event)"
+    name="" id="" cols="30" rows="10"></textarea>
   </div>
 
   <div class="max-w-xs py-2">

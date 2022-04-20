@@ -1,20 +1,17 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
   DoCheck,
   ElementRef,
   EventEmitter,
-  forwardRef,
   Input,
   KeyValueDiffer,
   KeyValueDiffers,
   NgZone,
   OnDestroy,
   Output,
-  ViewChild,
+  Directive,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
 import { Editor, EditorChange, EditorFromTextArea, ScrollInfo } from 'codemirror';
 
 function normalizeLineEndings(str: string): string {
@@ -24,76 +21,42 @@ function normalizeLineEndings(str: string): string {
   return str.replace(/\r\n|\r/g, '\n');
 }
 
-declare var require: any;
 declare var CodeMirror: any;
 
-@Component({
-  selector: 'ngx-codemirror',
-  template: `
-    <textarea
-      [name]="name"
-      class="ngx-codemirror {{ className }}"
-      [class.ngx-codemirror--focused]="isFocused"
-      autocomplete="off"
-      [autofocus]="autoFocus"
-      #ref
-    >
-    </textarea>
-  `,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CodemirrorComponent),
-      multi: true,
-    },
-  ],
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Directive({
+  selector: '[codemirrorEditor]'
 })
-export class CodemirrorComponent
-  implements AfterViewInit, OnDestroy, ControlValueAccessor, DoCheck
-{
-  /* class applied to the created textarea */
-  @Input() className = '';
-  /* name applied to the created textarea */
-  @Input() name = 'codemirror';
-  /* autofocus setting applied to the created textarea */
-  @Input() autoFocus = false;
-  /**
-   * set options for codemirror
-   * @link http://codemirror.net/doc/manual.html#config
-   */
-  @Input()
-  set options(value: { [key: string]: any }) {
-    this._options = value;
-    if (!this._differ && value) {
-      this._differ = this._differs.find(value).create();
-    }
+export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, DoCheck{
+/* class applied to the created textarea */
+@Input() className = '';
+/* name applied to the created textarea */
+@Input() name = 'codemirror';
+/* autofocus setting applied to the created textarea */
+@Input() autoFocus = false;
+/**
+ * set options for codemirror
+ * @link http://codemirror.net/doc/manual.html#config
+ */
+@Input()
+set options(value: { [key: string]: any }) {
+  this._options = value;
+  if (!this._differ && value) {
+    this._differ = this._differs.find(value).create();
   }
-  /* preserve previous scroll position after updating value */
-  @Input() preserveScrollPosition = false;
-  /* called when the text cursor is moved */
-  @Output() cursorActivity = new EventEmitter<Editor>();
-  /* called when the editor is focused or loses focus */
-  @Output() focusChange = new EventEmitter<boolean>();
-  /* called when the editor is scrolled */
-  // eslint-disable-next-line @angular-eslint/no-output-native
-  @Output() scroll = new EventEmitter<ScrollInfo>();
-  /* called when file(s) are dropped */
-  // eslint-disable-next-line @angular-eslint/no-output-native
-  @Output() drop = new EventEmitter<[Editor, DragEvent]>();
-  @ViewChild('ref') ref!: ElementRef<HTMLTextAreaElement>;
-
-  @Input()
-  private _textArea!: ElementRef<HTMLTextAreaElement>;
-  public get textArea(): ElementRef<HTMLTextAreaElement> {
-    return this._textArea;
-  }
-  public set textArea(value: ElementRef<HTMLTextAreaElement>) {
-    this._textArea = value;
-    this.ngAfterViewInit();
-  }
-
+}
+/* preserve previous scroll position after updating value */
+@Input() preserveScrollPosition = false;
+/* called when the text cursor is moved */
+@Output() cursorActivity = new EventEmitter<Editor>();
+/* called when the editor is focused or loses focus */
+@Output() focusChange = new EventEmitter<boolean>();
+/* called when the editor is scrolled */
+// eslint-disable-next-line @angular-eslint/no-output-native
+@Output() scroll = new EventEmitter<ScrollInfo>();
+/* called when file(s) are dropped */
+// eslint-disable-next-line @angular-eslint/no-output-native
+@Output() drop = new EventEmitter<[Editor, DragEvent]>();
+@Output() changeValue = new EventEmitter<any>();
   value = '';
   disabled = false;
   isFocused = false;
@@ -106,7 +69,7 @@ export class CodemirrorComponent
   private _differ?: KeyValueDiffer<string, any>;
   private _options: any;
 
-  constructor(private _differs: KeyValueDiffers, private _ngZone: NgZone) {}
+  constructor(private textArea: ElementRef, private _differs: KeyValueDiffers, private _ngZone: NgZone) {}
 
   get codeMirrorGlobal(): any {
     if (this._codeMirror) {
@@ -123,7 +86,7 @@ export class CodemirrorComponent
       const codeMirrorObj = await this.codeMirrorGlobal;
       const codeMirror = codeMirrorObj?.default ? codeMirrorObj.default : codeMirrorObj;
       this.codeMirror = codeMirror.fromTextArea(
-        this.textArea?.nativeElement ?? this.ref.nativeElement,
+        this.textArea?.nativeElement,
         this._options,
       ) as EditorFromTextArea;
       this.codeMirror.on('cursorActivity', cm => this._ngZone.run(() => this.cursorActive(cm)));
@@ -139,6 +102,7 @@ export class CodemirrorComponent
       this.codeMirror.setValue(this.value);
     });
   }
+
   ngDoCheck() {
     if (!this._differ) {
       return;
@@ -227,7 +191,10 @@ export class CodemirrorComponent
     this.setOptionIfChanged('readOnly', this.disabled);
   }
   /** Implemented as part of ControlValueAccessor. */
-  private onChange = (_: any) => {};
+  onChange = (_: any) => {
+    this.changeValue.emit(this.value);
+  };
   /** Implemented as part of ControlValueAccessor. */
   private onTouched = () => {};
+
 }

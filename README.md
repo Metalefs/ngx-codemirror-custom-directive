@@ -75,6 +75,21 @@ Use The Component
 ></ngx-codemirror>
 ```
 
++ Use The Directive
+
+```html
+  <textarea codemirrorEditor
+    [options]="options"
+    [disabled]="readOnly"
+    [autoFocus]="true"
+    (cursorActivity)="handleChange($event)"
+    (focusChange)="handleChange($event)"
+    (scroll)="handleChange($event)"
+    (drop)="handleChange($event)"
+    (changeValue)="handleChange($event)">
+  </textarea>
+```
+
 ## Inputs
 
 All Inputs of [ngModel](https://angular.io/api/forms/NgModel#inputs) and
@@ -89,6 +104,7 @@ All Inputs of [ngModel](https://angular.io/api/forms/NgModel#inputs) and
 All outputs of [ngModel](https://angular.io/api/forms/NgModel#outputs) and
 
 - `focusChange` - called when the editor is focused or loses focus
+- `valueChange` - called when the editor's value changes
 - `scroll` - called when the editor is scrolled (not wrapped inside angular change detection must manually trigger change detection or run inside ngzone)
 - `cursorActivity` - called when the text cursor is moved
 - `drop` - called when file(s) are dropped

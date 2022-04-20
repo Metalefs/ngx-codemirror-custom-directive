@@ -7,3 +7,6 @@
 .ngx-codemirror {
   border: 1px solid #ccc;
 }
+.bold{
+  font-weight: bold;
+}
