@@ -82,6 +82,7 @@ Use The Component
     [options]="options"
     [disabled]="readOnly"
     [autoFocus]="true"
+    [enableAutoComplete]="true"
     (cursorActivity)="handleChange($event)"
     (focusChange)="handleChange($event)"
     (scroll)="handleChange($event)"
@@ -93,7 +94,8 @@ Use The Component
 ## Inputs
 
 All Inputs of [ngModel](https://angular.io/api/forms/NgModel#inputs) and
-
+- `enableAutoComplete` - enable anyword autocomplete feature
+- `autoCompleteWords` - extra words used for autocompletion
 - `options` - options passed to the CodeMirror instance see http://codemirror.net/doc/manual.html#config
 - `name` - name applied to the created textarea
 - `autoFocus` - setting applied to the created textarea
