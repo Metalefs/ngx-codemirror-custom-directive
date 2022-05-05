@@ -41,6 +41,7 @@ export class AppComponent {
     lineNumbers: true,
     autoCloseBrackets: true,
     mode: this.mode,
+    extraKeys: {"';'": "autocomplete"}
   };
   defaults = defaults;
   @ViewChild(CodemirrorEditorDirective, { static: true }) codemirror: CodemirrorEditorDirective | undefined;

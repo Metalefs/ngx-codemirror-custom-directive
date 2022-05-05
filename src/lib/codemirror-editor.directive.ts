@@ -46,6 +46,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   }
   /* preserve previous scroll position after updating value */
   @Input() preserveScrollPosition = false;
+  @Input() enableAutoComplete: boolean = true;
   @Input() autoCompleteWords: string[] = [];
   /* called when the text cursor is moved */
   @Output() cursorActivity = new EventEmitter<Editor>();
@@ -85,27 +86,24 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   ngAfterViewInit() {
     this._ngZone.runOutsideAngular(async () => {
 
-      const codeMirrorObj = await this.codeMirrorGlobal;
-      const codeMirror = codeMirrorObj?.default ? codeMirrorObj.default : codeMirrorObj;
-
       var editor = CodeMirror.fromTextArea(this.textArea?.nativeElement, {
         ...this._options,
-        extraKeys: {"';'": "autocomplete"}
       });
 
-      editor!.on('cursorActivity', cm => this._ngZone.run(() => this.cursorActive(cm)));
-      editor!.on('scroll', this.scrollChanged.bind(this));
-      editor!.on('blur', () => this._ngZone.run(() => this.focusChanged(false)));
-      editor!.on('focus', () => this._ngZone.run(() => this.focusChanged(true)));
-      editor!.on('change', (cm, change) =>
+      editor.on('cursorActivity', cm => this._ngZone.run(() => this.cursorActive(cm)));
+      editor.on('scroll', this.scrollChanged.bind(this));
+      editor.on('blur', () => this._ngZone.run(() => this.focusChanged(false)));
+      editor.on('focus', () => this._ngZone.run(() => this.focusChanged(true)));
+      editor.on('change', (cm, change) =>
         this._ngZone.run(() => this.codemirrorValueChanged(cm, change)),
       );
-      editor!.on('drop', (cm, e) => {
+      editor.on('drop', (cm, e) => {
         this._ngZone.run(() => this.dropFiles(cm, e));
       });
-      editor!.setValue(this.value);
+      editor.setValue(this.value);
 
-      this.registerAutoComplete();
+      if(this.enableAutoComplete || this.autoCompleteWords)
+        this.registerAutoComplete();
 
       // CodeMirror.hint.javascript = function (editor) {
       //   // Find the word fragment near cursor that needs auto-complete...
@@ -235,7 +233,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
 
   registerAutoComplete(){
     var WORD = /[\w$]+/, RANGE = 500;
-    var EXTRAWORDS = this.autoCompleteWords || ['true', 'false', 'null', 'undefined'];
+    var EXTRAWORDS = this.autoCompleteWords || [''];
 
     CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
       var word = options && options.word || WORD;
