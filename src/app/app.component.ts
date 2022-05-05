@@ -10,6 +10,24 @@ const defaults = {
     repo: "https://github.com/scttcper/ngx-codemirror"
   };
   const hello: string = 'world';`,
+  'text/javascript': `const component = {
+    name: "@ctrl/ngx-codemirror",
+  };`,
+  htmlmixed: `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+  </body>
+  </html>`,
+  'text/css': `body {
+    background-color: #fff;
+    color: #222;
+  }`,
 };
 
 @Component({
@@ -18,9 +36,10 @@ const defaults = {
 })
 export class AppComponent {
   readOnly = false;
-  mode: keyof typeof defaults = 'markdown';
+  mode: keyof typeof defaults = 'text/javascript';
   options = {
     lineNumbers: true,
+    autoCloseBrackets: true,
     mode: this.mode,
   };
   defaults = defaults;
@@ -39,11 +58,13 @@ export class AppComponent {
 
   ngOnInit() {
     this.codemirror?.writeValue(this.defaults[this.mode]);
+
+
   }
 
   handleChange($event): void {
-    console.log('ngModelChange', $event);
-    this.codemirror?.codeMirror?.markText({ line: 3, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
+    //console.log('ngModelChange', $event);
+    this.codemirror?.codeMirror?.markText({ line: 2, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
   }
 
   clear(): void {
