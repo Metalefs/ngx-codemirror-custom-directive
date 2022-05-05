@@ -264,8 +264,8 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
 
       return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
     });
-    CodeMirror.commands.autocomplete = function(cm) {
-      cm.showHint({hint: CodeMirror.hint.anyword});
+    (CodeMirror as any).commands.autocomplete = function(cm) {
+      cm.showHint({hint: (CodeMirror as any).hint.anyword});
     }
   }
 }
