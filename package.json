@@ -1,6 +1,6 @@
 {
   "name": "@metalefs/ngx-codemirror-directive",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "repository": "scttcper/ngx-codemirror",
   "scripts": {
