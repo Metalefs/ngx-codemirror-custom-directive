@@ -59,13 +59,12 @@ export class AppComponent {
 
   ngOnInit() {
     this.codemirror?.writeValue(this.defaults[this.mode]);
-
-
+    console.log(this.codemirror?.value)
   }
 
   handleChange($event): void {
-    //console.log('ngModelChange', $event);
     this.codemirror?.codeMirror?.markText({ line: 2, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
+
   }
 
   clear(): void {

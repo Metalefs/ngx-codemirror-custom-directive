@@ -48,6 +48,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   @Input() preserveScrollPosition = false;
   @Input() enableAutoComplete: boolean = true;
   @Input() autoCompleteWords: string[] = [];
+  @Input() usePreviousWords: boolean = true;
   /* called when the text cursor is moved */
   @Output() cursorActivity = new EventEmitter<Editor>();
   /* called when the editor is focused or loses focus */
@@ -84,6 +85,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   }
 
   ngAfterViewInit() {
+
     this._ngZone.runOutsideAngular(async () => {
 
       var editor = CodeMirror.fromTextArea(this.textArea?.nativeElement, {
@@ -234,7 +236,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   registerAutoComplete(){
     var WORD = /[\w$]+/, RANGE = 500;
     var EXTRAWORDS = this.autoCompleteWords || [''];
-
+    const self = this;
     CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
       var word = options && options.word || WORD;
       var range = options && options.range || RANGE;
@@ -255,6 +257,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
             if (line == cur.line && m[0] === curWord) continue;
             if ((!curWord || m[0].lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, m[0])) {
               seen[m[0]] = true;
+              if(self.usePreviousWords)
               list.push(m[0]);
             }
           }

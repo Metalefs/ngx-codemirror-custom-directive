@@ -6,18 +6,17 @@
         [options]="options"
         [disabled]="readOnly"
         [autoFocus]="true"
+        [autoCompleteWords]="['it','works']"
+        [usePreviousWords]="false"
         (cursorActivity)="handleChange($event)"
         (focusChange)="handleChange($event)"
         (scroll)="handleChange($event)"
         (drop)="handleChange($event)"
         (changeValue)="handleChange($event)"
-        name=""
-        id=""
         cols="30"
         rows="10"
       ></textarea>
     </div>
-
     <div class="max-w-xs py-2">
       <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
       <select
