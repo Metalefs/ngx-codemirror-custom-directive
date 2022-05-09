@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@metalefs/ngx-codemirror-directive",
-  "version": "0.0.0-placeholder",
+  "version": "0.0.7",
   "license": "MIT",
   "description": "CodeMirror wrapper for Angular",
   "dependencies": {
@@ -10,7 +10,8 @@
   "peerDependencies": {
     "@angular/core": ">=12.0.0-0",
     "@angular/forms": ">=12.0.0-0",
-    "codemirror": ">=5.63.3"
+    "@codemirror/autocomplete": "^0.20.0",
+    "codemirror": ">=5.65.3"
   },
   "repository": "scttcper/ngx-codemirror",
   "homepage": "https://github.com/scttcper/ngx-codemirror",

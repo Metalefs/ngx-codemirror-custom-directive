@@ -19,7 +19,7 @@
   "dependencies": {
     "@codemirror/autocomplete": "^0.20.0",
     "@types/codemirror": "5.60.5",
-    "codemirror": "5.64.0"
+    "codemirror": ">=5.65.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.0.3",
