@@ -1,4 +1,5 @@
-import { Component, ContentChild, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import CodeMirror from 'codemirror';
 import { CodemirrorEditorDirective } from 'src/lib/codemirror-editor.directive';
 
 const defaults = {
@@ -34,21 +35,17 @@ const defaults = {
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   readOnly = false;
   mode: keyof typeof defaults = 'text/javascript';
   options = {
     lineNumbers: true,
     autoCloseBrackets: true,
     mode: this.mode,
-    extraKeys: {"';'": "autocomplete"}
+    extraKeys: {"';'":"autocomplete"}
   };
   defaults = defaults;
   @ViewChild(CodemirrorEditorDirective, { static: true }) codemirror: CodemirrorEditorDirective | undefined;
-  constructor(
-  ) {
-
-  }
 
   changeMode(): void {
     this.options = {
@@ -64,7 +61,6 @@ export class AppComponent {
 
   handleChange($event): void {
     this.codemirror?.codeMirror?.markText({ line: 2, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
-
   }
 
   clear(): void {

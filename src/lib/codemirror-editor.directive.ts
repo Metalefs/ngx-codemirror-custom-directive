@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Editor, EditorChange, EditorFromTextArea, ScrollInfo } from 'codemirror';
-import * as CodeMirror from "codemirror";
+import * as CodeMirror from 'codemirror';
 
 function normalizeLineEndings(str: string): string {
   if (!str) {
@@ -22,11 +22,12 @@ function normalizeLineEndings(str: string): string {
   return str.replace(/\r\n|\r/g, '\n');
 }
 
-
 @Directive({
-  selector: '[codemirrorEditor]'
+  selector: '[codemirrorEditor]',
 })
-export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, ControlValueAccessor, DoCheck {
+export class CodemirrorEditorDirective
+  implements AfterViewInit, OnDestroy, ControlValueAccessor, DoCheck
+{
   /* class applied to the created textarea */
   @Input() className = '';
   /* name applied to the created textarea */
@@ -72,7 +73,11 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   private _differ?: KeyValueDiffer<string, any>;
   private _options: any;
 
-  constructor(private textArea: ElementRef, private _differs: KeyValueDiffers, private _ngZone: NgZone) { }
+  constructor(
+    private textArea: ElementRef,
+    private _differs: KeyValueDiffers,
+    private _ngZone: NgZone,
+  ) {}
 
   get codeMirrorGlobal(): any {
     if (this._codeMirror) {
@@ -85,9 +90,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
   }
 
   ngAfterViewInit() {
-
     this._ngZone.runOutsideAngular(async () => {
-
       var editor = CodeMirror.fromTextArea(this.textArea?.nativeElement, {
         ...this._options,
       });
@@ -104,8 +107,7 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
       });
       editor.setValue(this.value);
 
-      if(this.enableAutoComplete || this.autoCompleteWords)
-        this.registerAutoComplete();
+      if (this.enableAutoComplete || this.autoCompleteWords) this.registerAutoComplete();
 
       // CodeMirror.hint.javascript = function (editor) {
       //   // Find the word fragment near cursor that needs auto-complete...
@@ -231,44 +233,62 @@ export class CodemirrorEditorDirective implements AfterViewInit, OnDestroy, Cont
     this.changeValue.emit(this.value);
   };
   /** Implemented as part of ControlValueAccessor. */
-  private onTouched = () => { };
+  private onTouched = () => {};
 
-  registerAutoComplete(){
-    var WORD = /[\w$]+/, RANGE = 500;
+  registerAutoComplete() {
+    var WORD = /[\w$]+/,
+      RANGE = 500;
     var EXTRAWORDS = this.autoCompleteWords || [''];
     const self = this;
-    CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
-      var word = options && options.word || WORD;
-      var range = options && options.range || RANGE;
-      var extraWords = options && options.extraWords || EXTRAWORDS;
+    CodeMirror.registerHelper('hint', 'anyword', function (editor, options) {
+      var word = (options && options.word) || WORD;
+      var range = (options && options.range) || RANGE;
+      var extraWords = (options && options.extraWords) || EXTRAWORDS;
 
-      var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
-      var end = cur.ch, start = end;
+      var cur = editor.getCursor(),
+        curLine = editor.getLine(cur.line);
+      var end = cur.ch,
+        start = end;
       while (start && word.test(curLine.charAt(start - 1))) --start;
       var curWord = start != end && curLine.slice(start, end);
 
-      var list = options && options.list || [], seen = {};
-      var re = new RegExp(word.source, "g");
+      var list = (options && options.list) || [],
+        seen = {};
+      var re = new RegExp(word.source, 'g');
       for (var dir = -1; dir <= 1; dir += 2) {
-        var line = cur.line, endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
+        var line = cur.line,
+          endLine =
+            Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
         for (; line != endLine; line += dir) {
-          var text = editor.getLine(line), m;
-          while (m = re.exec(text)) {
+          var text = editor.getLine(line),
+            m;
+          while ((m = re.exec(text))) {
             if (line == cur.line && m[0] === curWord) continue;
-            if ((!curWord || m[0].lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, m[0])) {
+            if (
+              (!curWord || m[0].lastIndexOf(curWord, 0) == 0) &&
+              !Object.prototype.hasOwnProperty.call(seen, m[0])
+            ) {
               seen[m[0]] = true;
-              if(self.usePreviousWords)
-              list.push(m[0]);
+              if (self.usePreviousWords) list.push(m[0]);
             }
           }
         }
       }
-      list.push(...(extraWords.filter(el => el.startsWith(curWord || ''))))
+      list.push(...extraWords.filter(el => el.startsWith(curWord || '')));
 
-      return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+      return {
+        list: list,
+        from: CodeMirror.Pos(cur.line, start),
+        to: CodeMirror.Pos(cur.line, end),
+      };
     });
-    (CodeMirror as any).commands.autocomplete = function(cm) {
-      cm.showHint({hint: (CodeMirror as any).hint.anyword});
-    }
+
+    (CodeMirror as any).commands.autocomplete = function (cm,onPickCallback) {
+      const hint = { hint: (CodeMirror as any).hint.anyword };
+      cm.showHint(hint);
+      var completion = cm.state.completionActive?.data;
+      CodeMirror.on(completion, 'pick', onPickCallback)
+      return [completion];
+    };
   }
 }
