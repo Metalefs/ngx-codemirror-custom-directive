@@ -13,8 +13,8 @@
     "codemirror": ">=5.63.3"
   },
   "repository": "scttcper/ngx-codemirror",
-  "homepage": "https://github.com/scttcper/ngx-codemirror",
-  "bugs": "https://github.com/scttcper/ngx-codemirror/issues",
+  "homepage": "https://github.com/Metalefs/ngx-codemirror-custom-directive",
+  "bugs": "https://github.com/Metalefs/ngx-codemirror-custom-directive/issues",
   "keywords": ["ngx", "angular", "codemirror"],
   "ngPackage": {
     "allowedNonPeerDependencies": [

@@ -1,8 +1,8 @@
 {
   "name": "@metalefs/ngx-codemirror-directive",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
-  "repository": "scttcper/ngx-codemirror",
+  "repository": "https://github.com/Metalefs/ngx-codemirror-custom-directive",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
