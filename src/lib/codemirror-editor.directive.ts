@@ -235,7 +235,7 @@ export class CodemirrorEditorDirective
   /** Implemented as part of ControlValueAccessor. */
   private onTouched = () => {};
 
-  registerAutoComplete(CALLBACK) {
+  registerAutoComplete(CALLBACK?) {
     var WORD = /[\w$]+/,
       RANGE = 500;
     var EXTRAWORDS = this.autoCompleteWords || [''];
