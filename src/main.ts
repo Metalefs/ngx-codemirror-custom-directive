@@ -2,7 +2,7 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/addon/hint/show-hint.js';
 import 'codemirror/addon/hint/anyword-hint.js';
-import 'codemirror//addon/edit/closebrackets.js';
+import 'codemirror/addon/edit/closebrackets.js';
 import "codemirror/lib/codemirror";
 
 
