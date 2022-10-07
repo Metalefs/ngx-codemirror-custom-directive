@@ -287,7 +287,7 @@ export class CodemirrorEditorDirective
       const hint = { hint: (CodeMirror as any).hint.anyword };
       cm.showHint(hint);
       var completion = cm.state.completionActive?.data;
-      CodeMirror.on(completion, 'pick', (EVENT)=>{CALLBACK && CALLBACK(EVENT); onPickCallback(EVENT)})
+      CodeMirror.on(completion, 'pick', ()=>{CALLBACK && CALLBACK(completion); onPickCallback(completion)})
       return [completion];
     };
   }

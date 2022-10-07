@@ -6,9 +6,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm version patch && ng-packagr -p src/lib/package.json",
+    "build": "ng-packagr -p src/lib/package.json",
     "postbuild": "cpy README.md LICENSE dist",
-    "publish": "cd dist && npm publish --access public",
+    "publish": "npm version patch && cd dist && npm publish --access public",
     "test": "ng test --watch=false --browsers=ChromeCI",
     "test:ci": "ng test --watch=false --code-coverage --no-progress",
     "lint": "ng lint",
