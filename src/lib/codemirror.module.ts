@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 
-import { CodemirrorComponent } from './codemirror.component';
 import { CodemirrorEditorDirective } from './codemirror-editor.directive';
 
 @NgModule({
-  exports: [CodemirrorComponent, CodemirrorEditorDirective],
-  declarations: [CodemirrorComponent, CodemirrorEditorDirective],
+  exports: [CodemirrorEditorDirective],
+  declarations: [CodemirrorEditorDirective],
 })
 export class CodemirrorModule {}

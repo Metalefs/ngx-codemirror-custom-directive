@@ -2,8 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@import 'codemirror/lib/codemirror';
-
 .ngx-codemirror {
   border: 1px solid #ccc;
 }

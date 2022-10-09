@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import CodeMirror from 'codemirror';
 import { CodemirrorEditorDirective } from 'src/lib/codemirror-editor.directive';
 
@@ -35,17 +35,24 @@ const defaults = {
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements AfterViewInit{
   readOnly = false;
   mode: keyof typeof defaults = 'text/javascript';
   options = {
     lineNumbers: true,
     autoCloseBrackets: true,
     mode: this.mode,
-    extraKeys: {"';'":"autocomplete"}
   };
   defaults = defaults;
-  @ViewChild(CodemirrorEditorDirective, { static: true }) codemirror: CodemirrorEditorDirective | undefined;
+  @ViewChild(CodemirrorEditorDirective, { static: true })
+  private _codemirror: CodemirrorEditorDirective | undefined;
+  public get codemirror(): CodemirrorEditorDirective | undefined {
+    return this._codemirror;
+  }
+  public set codemirror(value: CodemirrorEditorDirective | undefined) {
+    this._codemirror = value;
+
+  }
 
   changeMode(): void {
     this.options = {
@@ -54,13 +61,14 @@ export class AppComponent implements OnInit{
     };
   }
 
-  ngOnInit() {
-    this.codemirror?.writeValue(this.defaults[this.mode]);
+  ngAfterViewInit(){
     console.log(this.codemirror?.value)
+
+    this.codemirror?.writeValue(this.defaults[this.mode]);
   }
 
   handleChange($event): void {
-    this.codemirror?.codeMirror?.markText({ line: 2, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
+    this.codemirror?.markText({ line: 2, ch: 0 }, { line: 4, ch: 10 }, { className: 'bold', });
   }
 
   clear(): void {

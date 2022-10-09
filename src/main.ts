@@ -1,11 +1,3 @@
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/markdown/markdown';
-import 'codemirror/addon/hint/show-hint.js';
-import 'codemirror/addon/hint/anyword-hint.js';
-import 'codemirror/addon/edit/closebrackets.js';
-import "codemirror/lib/codemirror";
-
-
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

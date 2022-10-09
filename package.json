@@ -8,7 +8,7 @@
     "start": "ng serve",
     "build": "ng-packagr -p src/lib/package.json",
     "postbuild": "cpy README.md LICENSE dist",
-    "publish": "npm version patch && cd dist && npm publish --access public",
+    "publish": "cd ./src/lib && npm version patch && cd ../../dist && npm publish --access public",
     "test": "ng test --watch=false --browsers=ChromeCI",
     "test:ci": "ng test --watch=false --code-coverage --no-progress",
     "lint": "ng lint",
@@ -17,9 +17,23 @@
   },
   "private": true,
   "dependencies": {
-    "@codemirror/autocomplete": "^0.20.0",
-    "@types/codemirror": "5.60.5",
-    "codemirror": ">=5.65.3"
+    "@codemirror/autocomplete": "6.3.0",
+    "@codemirror/commands": "6.1.1",
+    "@codemirror/lang-markdown": "6.0.1",
+    "@codemirror/language": "6.2.1",
+    "@codemirror/search": "6.2.1",
+    "@codemirror/state": "6.1.2",
+    "@codemirror/view": "6.3.0",
+    "codemirror": ">=6.0.1"
+  },
+  "overrides": {
+    "@codemirror/autocomplete": "6.3.0",
+    "@codemirror/commands": "6.1.1",
+    "@codemirror/lang-markdown": "6.0.1",
+    "@codemirror/language": "6.2.1",
+    "@codemirror/search": "6.2.1",
+    "@codemirror/state": "6.1.2",
+    "@codemirror/view": "6.3.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.0.3",
